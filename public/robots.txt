@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://lektos.pl/sitemap.xml

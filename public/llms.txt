@@ -1,0 +1,6 @@
+# Lektos
+
+> Platforma automatyzacji operacji biznesowych łącząca obsługę poczty, integracje z systemami zewnętrznymi i raportowanie w jednym miejscu.
+
+## Główne strony
+- [Lektos](https://lektos.pl/): Strona główna - opis systemu, funkcje, platforma, model współpracy i kontakt.

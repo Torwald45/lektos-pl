@@ -1,0 +1,8 @@
+/*
+  Strict-Transport-Security: max-age=15552000; includeSubDomains; preload
+  Content-Security-Policy: frame-ancestors 'self'; base-uri 'self'
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  X-XSS-Protection: 1; mode=block
