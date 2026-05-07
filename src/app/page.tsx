@@ -2,20 +2,50 @@
 import { useState, useEffect } from "react";
 
 // --- dane ---
-
 const NAV_ITEMS = [
   { label: "Start", id: "start" },
   { label: "System", id: "system" },
   { label: "Funkcje", id: "funkcje" },
-  { label: "Platforma", id: "platforma" },
   { label: "Wdrożenie", id: "wdrozenie" },
-  { label: "Kontakt", id: "kontakt" },
 ];
+
+const AKRONIM = [
+  { letter: "L", title: "LINKS", meaning: "your systems", desc: "łączy Twoje systemy w jedną całość" },
+  { letter: "E", title: "EXECUTES", meaning: "tasks automatically", desc: "wykonuje zadania automatycznie, bez ręcznej obsługi" },
+  { letter: "K", title: "KNOWS", meaning: "your data", desc: "zna Twoje dane i odpowiada na ich podstawie" },
+  { letter: "T", title: "TALKS", meaning: "your language", desc: "rozmawia z pracownikami w języku naturalnym" },
+  { letter: "O", title: "OPERATES", meaning: "24/7", desc: "działa bez przerwy, 24 godziny na dobę" },
+  { letter: "S", title: "SCALES", meaning: "with your business", desc: "skaluje się razem z rozwojem Twojej firmy" },
+];
+
+const FILOZOFIA = [
+  {
+    title: "Brak vendor lock-in",
+    desc: "Cały system możesz przenieść na własną infrastrukturę w każdej chwili. Nie płacisz za zadania ani uruchomienia.",
+  },
+  {
+    title: "Brak limitów platform",
+    desc: "Nie ma sufitu wykonań, brakujących konektorów ani limitów przepustowości narzuconych z zewnątrz.",
+  },
+  {
+    title: "Pełny dostęp do logiki",
+    desc: "Każdy skrypt, integracja, raport to czytelny kod w repozytorium git. Audytowalny, wersjonowany, odwracalny.",
+  },
+  {
+    title: "Stabilność",
+    desc: "Bazujemy na technologiach sprawdzonych przez dekady w produkcji. Bez ryzyka nagłej zmiany warunków, modelu rozliczeń czy przejęcia.",
+  },
+  {
+    title: "Bezpieczeństwo",
+    desc: "Dane nie wychodzą poza Twoją infrastrukturę jeśli tak zdecydujesz. Pełna kontrola nad tym co i gdzie jest przetwarzane.",
+  },
+];
+
 
 const FUNKCJE = [
   {
     title: "Automatyzacja skrzynki mailowej",
-    desc: "System czyta przychodzące wiadomości i wykonuje akcje automatycznie. Pracownik może też wydać polecenie przez czat - wysłać, skasować lub przenieść wiadomość bez otwierania skrzynki.",
+    desc: "System czyta przychodzące wiadomości, klasyfikuje je i wykonuje akcje automatycznie. Pracownik może też wydać polecenie przez czat - wysłać, skasować, przenieść, oflagować wiadomość bez otwierania skrzynki.",
     icon: (
       <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <rect x="2" y="4" width="20" height="16" rx="2"/>
@@ -25,7 +55,7 @@ const FUNKCJE = [
   },
   {
     title: "Automatyczne raporty",
-    desc: "Lektos generuje raporty na podstawie danych z Twoich systemów i wysyła je według harmonogramu lub na żądanie.",
+    desc: "Lektos generuje raporty na podstawie danych z Twoich systemów i wysyła je według harmonogramu lub na żądanie. Modułowy silnik raportów pozwala dodać nowy raport bez pisania skryptu od zera.",
     icon: (
       <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -34,8 +64,8 @@ const FUNKCJE = [
     ),
   },
   {
-    title: "Panel dla pracowników",
-    desc: "Pracownicy zadają pytania w języku naturalnym i otrzymują odpowiedzi oparte na danych z podłączonych systemów w czasie rzeczywistym.",
+    title: "Panel w języku naturalnym",
+    desc: "Pracownicy zadają pytania (ile zamówień wczoraj, pokaż nieopłacone faktury, wyślij raport miesięczny) i otrzymują odpowiedzi oparte na danych z podłączonych systemów w czasie rzeczywistym.",
     icon: (
       <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
@@ -44,7 +74,7 @@ const FUNKCJE = [
   },
   {
     title: "Integracje API",
-    desc: "Lektos łączy się z Twoimi systemami przez API - ERP, CRM, e-commerce i inne. Gotowe konektory lub dedykowana integracja.",
+    desc: "Lektos łączy się z Twoimi systemami przez API. Mamy działające integracje z Way2Send, EasyStorage, INSEE/iStruct, LoMag, Mettler Toledo, IMAP/SMTP, FTP/SFTP, MS SQL Server, PostgreSQL, MySQL/MariaDB. Dla nowych systemów piszemy dedykowany konektor w Pythonie.",
     icon: (
       <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
         <circle cx="12" cy="12" r="3"/>
@@ -52,60 +82,91 @@ const FUNKCJE = [
       </svg>
     ),
   },
-];
-
-const AKRONIM = [
-  { letter: "L", meaning: "Links your systems" },
-  { letter: "E", meaning: "Executes tasks automatically" },
-  { letter: "K", meaning: "Knows your data" },
-  { letter: "T", meaning: "Talks your language" },
-  { letter: "O", meaning: "Operates 24/7" },
-  { letter: "S", meaning: "Scales with your business" },
+  {
+    title: "Konektory MCP",
+    desc: "Lektos buduje konektory MCP (Model Context Protocol) - protokół pozwalający modelom AI (Claude, ChatGPT, lokalne LLM) operować na Twoich plikach, bazach danych, mailach, repozytoriach git i systemach zewnętrznych. AI nie tylko czyta dane, ale wykonuje akcje przez ustandaryzowany interfejs.",
+    icon: (
+      <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    ),
+  },
+  {
+    title: "API dla integratorów",
+    desc: "Lektos API to multi-tenant warstwa REST/JSON, której mogą używać integratorzy Twoich systemów zewnętrznych. Własny system raportujący może wystawić dane do Lektosa standardowym API zamiast pisać niestandardowy interfejs.",
+    icon: (
+      <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+        <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>
+      </svg>
+    ),
+  },
+  {
+    title: "RAG i self-hosted LLM",
+    desc: "Moduł RAG pozwala AI odpowiadać na pytania na podstawie Twojej dokumentacji, maili archiwalnych i bazy wiedzy (PostgreSQL + pgvector). Dla klientów z wymogami compliance wdrażamy modele open source (Llama, Mistral, Qwen) na infrastrukturze klienta - cały stack AI działa lokalnie.",
+    badge: "na zamówienie",
+    icon: (
+      <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+        <path d="M12 2a9 9 0 100 18 9 9 0 000-18z"/>
+        <path d="M12 6v6l4 2"/>
+      </svg>
+    ),
+  },
 ];
 
 const KROKI = [
   {
     num: "01",
     title: "Analiza procesów",
-    desc: "Zbieramy dane o Twoich systemach i procesach - jakie narzędzia używasz, gdzie tracisz czas, co chcesz zautomatyzować.",
+    desc: "Zbieramy dane o Twoich systemach i procesach - jakie narzędzia używasz, gdzie tracisz czas, co chcesz zautomatyzować. Spotkanie 1-2h, raport z propozycją podziału na bloki.",
   },
   {
     num: "02",
     title: "Projekt automatyzacji",
-    desc: "Omawiamy wymagania i dzielimy wdrożenie na bloki. Każdy blok to osobna sekwencja działań - zatwierdzasz zanim ruszymy dalej.",
+    desc: "Omawiamy wymagania i dzielimy wdrożenie na bloki. Każdy blok to osobna sekwencja działań - zatwierdzasz zanim ruszymy dalej. Specyfikacja trafia do bazy wiedzy projektu.",
   },
   {
     num: "03",
     title: "Wdrożenie etapami",
-    desc: "Uruchamiamy kolejne bloki jeden po drugim. Testujesz każdy etap przed przejściem do następnego.",
+    desc: "Uruchamiamy kolejne bloki jeden po drugim. Testujesz każdy etap przed przejściem do następnego. Backup przed każdą zmianą produkcyjną.",
   },
   {
     num: "04",
-    title: "Gotowy system",
-    desc: "Lektos działa. Monitorujemy, wprowadzamy poprawki i rozszerzamy system w miarę potrzeb.",
+    title: "Stabilizacja",
+    desc: "Przekazujemy dokumentację, dostępy i procedury operacyjne. Klient wie jak system działa i jak go obsługiwać.",
+  },
+  {
+    num: "05",
+    title: "Utrzymanie i rozwój",
+    desc: "Lektos działa. Monitorujemy, wprowadzamy poprawki, rozszerzamy system w miarę potrzeb. Stała współpraca w modelu retainera albo na zlecenie.",
   },
 ];
 
 const MODEL = [
   {
     title: "Infrastruktura zarządzana",
-    desc: "Dostarczamy i konfigurujemy infrastrukturę serwerową dostosowaną do potrzeb Twojej firmy. Zarządzamy nią w całości - Ty korzystasz z systemu, my dbamy o resztę.",
+    desc: "Dostarczamy i konfigurujemy infrastrukturę serwerową. Zarządzamy nią w całości - hosting, monitoring, backup, aktualizacje, bezpieczeństwo. Najszybszy start, najmniej obowiązków po Twojej stronie.",
     highlight: true,
   },
   {
-    title: "Wdrożenie na infrastrukturze klienta",
-    desc: "Wdrożenie Lektos na Twoich własnych serwerach i systemach. Pełna kontrola po Twojej stronie.",
+    title: "Wdrożenie u klienta",
+    desc: "Lektos na Twoich własnych serwerach. Pełna kontrola po Twojej stronie, my dostarczamy wiedzę i konfigurację. Polecane gdy masz infrastrukturę albo wymogi compliance wymagające lokalnego hostingu.",
+    highlight: false,
+  },
+  {
+    title: "Wdrożenie hybrydowe",
+    desc: "Część komponentów u nas (np. konektory MCP, API), część u klienta (np. dane wrażliwe, LLM lokalny). Kompromis między szybkim startem a pełną kontrolą.",
     highlight: false,
   },
   {
     title: "Dedykowane wdrożenie",
-    desc: "Dedykowane wdrożenie dostosowane do procesów Twojej firmy. Każdy element systemu projektujemy pod Twoje potrzeby.",
+    desc: "Każdy element systemu projektujemy pod Twoje procesy. Dla nietypowych przypadków wymagających pracy od zera - integracje z systemami branżowymi, niestandardowe formaty danych, specyficzne workflow.",
     highlight: false,
   },
 ];
 
 // --- komponent ---
-
 export default function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -136,7 +197,6 @@ export default function Home() {
 
   return (
     <div style={{ fontFamily: "var(--font-dm-sans), sans-serif", color: "#1a1929", backgroundColor: "#ffffff" }}>
-
       {/* ===== NAVBAR ===== */}
       <nav style={{
         position: "sticky",
@@ -149,14 +209,12 @@ export default function Home() {
         backdropFilter: "blur(12px)",
       }}>
         <div style={{ maxWidth: 1140, margin: "0 auto", padding: "0 24px", display: "flex", alignItems: "center", justifyContent: "space-between", height: 68 }}>
-
           <button onClick={scrollToTop} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 34, height: 34, backgroundColor: "#3D3B8E", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{ fontFamily: "var(--font-sora), sans-serif", fontWeight: 800, fontSize: 18, color: "#ffffff" }}>L</span>
             </div>
             <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 17, fontWeight: 800, color: "#1a1929", letterSpacing: 2 }}>LEKTOS</span>
           </button>
-
           <div className="lk-desktop" style={{ display: "flex", alignItems: "center", gap: 2 }}>
             {NAV_ITEMS.map((item) => (
               <button
@@ -174,7 +232,6 @@ export default function Home() {
               onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3D3B8E"}
             >Umów demo</button>
           </div>
-
           <button
             className="lk-mobile"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -187,7 +244,6 @@ export default function Home() {
             }
           </button>
         </div>
-
         {menuOpen && (
           <div className="lk-mobile" style={{ backgroundColor: "#ffffff", borderTop: "1px solid #e8e8f4", padding: "8px 24px 20px" }}>
             {NAV_ITEMS.map((item) => (
@@ -205,69 +261,163 @@ export default function Home() {
         )}
       </nav>
 
-      {/* ===== HERO ===== */}
-      <section id="hero" style={{ position: "relative", minHeight: "calc(100vh - 68px)", display: "flex", alignItems: "center", overflow: "hidden", backgroundColor: "#ffffff" }}>
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 70% 50%, #eeeef9 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", right: "-6%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(120px, 18vw, 280px)", fontWeight: 900, color: "rgba(61,59,142,0.05)", letterSpacing: -8, userSelect: "none", lineHeight: 1, whiteSpace: "nowrap", pointerEvents: "none" }}>
-          LEKTOS
-        </div>
-        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, transparent 0%, #3D3B8E 30%, #3D3B8E 70%, transparent 100%)" }} />
-        <div style={{ position: "relative", maxWidth: 1140, margin: "0 auto", padding: "80px 24px 80px 48px", width: "100%" }}>
-          <div style={{ maxWidth: 620 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "#eeeef9", borderRadius: 100, padding: "6px 16px", marginBottom: 32 }}>
-              <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#3D3B8E" }} />
-              <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 2, textTransform: "uppercase" }}>Connect. Automate. Ask.</span>
+      {/* ===== HERO + AKRONIM ===== */}
+      <section id="start" style={{ position: "relative", overflow: "hidden", backgroundColor: "#ffffff" }}>
+        {/* czesc 1: hero */}
+        <div style={{ position: "relative", minHeight: "calc(100vh - 68px)", display: "flex", alignItems: "center" }}>
+          <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 70% 50%, #eeeef9 0%, transparent 70%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", right: "-6%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(120px, 18vw, 280px)", fontWeight: 900, color: "rgba(61,59,142,0.05)", letterSpacing: -8, userSelect: "none", lineHeight: 1, whiteSpace: "nowrap", pointerEvents: "none" }}>
+            LEKTOS
+          </div>
+          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 4, background: "linear-gradient(180deg, transparent 0%, #3D3B8E 30%, #3D3B8E 70%, transparent 100%)" }} />
+          <div style={{ position: "relative", maxWidth: 1140, margin: "0 auto", padding: "80px 24px 80px 48px", width: "100%" }}>
+            <div style={{ maxWidth: 660 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, backgroundColor: "#eeeef9", borderRadius: 100, padding: "6px 16px", marginBottom: 32 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", backgroundColor: "#3D3B8E" }} />
+                <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 2, textTransform: "uppercase" }}>Connect. Automate. Ask.</span>
+              </div>
+              <h1 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(38px, 6vw, 68px)", fontWeight: 800, color: "#1a1929", lineHeight: 1.08, marginBottom: 28, letterSpacing: -2 }}>
+                Intelligent<br />
+                Business<br />
+                <span style={{ color: "#3D3B8E" }}>Automation</span>
+              </h1>
+              <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "#4a4870", lineHeight: 1.8, marginBottom: 20, maxWidth: 540 }}>
+                Twoje systemy generują dane. Twoi pracownicy tracą czas na ręczne zadania.
+                Lektos to zmienia - łączy systemy, automatyzuje operacje i odpowiada
+                na pytania w języku naturalnym.
+              </p>
+              <p style={{ fontSize: "clamp(14px, 1.6vw, 15px)", color: "#3D3B8E", fontWeight: 600, lineHeight: 1.7, marginBottom: 44, maxWidth: 540 }}>
+                Lektos jest rozwiązaniem wykorzystującym narzędzia open source, bez warstw pośrednich, bez vendor lock-in. Budujemy w oparciu o Linux, Bash, Python.
+              </p>
+              <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
+                <button
+                  onClick={() => scrollToSection("kontakt")}
+                  style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 15, fontWeight: 700, backgroundColor: "#3D3B8E", color: "#ffffff", border: "2px solid #3D3B8E", borderRadius: 8, padding: "14px 30px", cursor: "pointer", transition: "all 0.2s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#2e2c6e"}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3D3B8E"}
+                >Umów demo</button>
+                <button
+                  onClick={() => scrollToSection("kontakt")}
+                  style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 15, fontWeight: 700, backgroundColor: "transparent", color: "#3D3B8E", border: "2px solid #3D3B8E", borderRadius: 8, padding: "14px 30px", cursor: "pointer", transition: "all 0.2s" }}
+                  onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#3D3B8E"; e.currentTarget.style.color = "#ffffff"; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#3D3B8E"; }}
+                >Zadaj pytanie</button>
+              </div>
             </div>
-            <h1 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(38px, 6vw, 68px)", fontWeight: 800, color: "#1a1929", lineHeight: 1.08, marginBottom: 28, letterSpacing: -2 }}>
-              Intelligent<br />
-              Business<br />
-              <span style={{ color: "#3D3B8E" }}>Automation</span>
-            </h1>
-            <p style={{ fontSize: "clamp(16px, 2vw, 18px)", color: "#4a4870", lineHeight: 1.8, marginBottom: 44, maxWidth: 500 }}>
-              Twoje systemy generują dane. Twoi pracownicy tracą czas na ręczne zadania.
-              Lektos to zmienia - automatyzuje operacje, raportuje i odpowiada na pytania
-              w języku naturalnym.
-            </p>
-            <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
-              <button
-                onClick={() => scrollToSection("kontakt")}
-                style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 15, fontWeight: 700, backgroundColor: "#3D3B8E", color: "#ffffff", border: "2px solid #3D3B8E", borderRadius: 8, padding: "14px 30px", cursor: "pointer", transition: "all 0.2s" }}
-                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#2e2c6e"}
-                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#3D3B8E"}
-              >Umów demo</button>
-              <button
-                onClick={() => scrollToSection("kontakt")}
-                style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 15, fontWeight: 700, backgroundColor: "transparent", color: "#3D3B8E", border: "2px solid #3D3B8E", borderRadius: 8, padding: "14px 30px", cursor: "pointer", transition: "all 0.2s" }}
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#3D3B8E"; e.currentTarget.style.color = "#ffffff"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent"; e.currentTarget.style.color = "#3D3B8E"; }}
-              >Zadaj pytanie</button>
+          </div>
+        </div>
+
+        {/* czesc 2: akronim */}
+        <div style={{ borderTop: "1px solid #e8e8f4", backgroundColor: "#fafaff", padding: "72px 24px" }}>
+          <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+            {/* naglowek */}
+            <div style={{ marginBottom: 48, maxWidth: 720 }}>
+              <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 3, textTransform: "uppercase" }}>Akronim</span>
+              <p style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(18px, 2.2vw, 22px)", fontWeight: 600, color: "#1a1929", lineHeight: 1.5, marginTop: 12, letterSpacing: -0.5 }}>
+                Lektos - z greki: wybrany, zebrany. Platforma zbiera dane z Twoich narzędzi i działa na ich podstawie.
+              </p>
+            </div>
+
+            {/* diagram poziomy z animacja */}
+            <div style={{ marginBottom: 56, overflow: "hidden" }}>
+              <svg viewBox="0 0 1080 220" xmlns="http://www.w3.org/2000/svg" style={{ width: "100%", height: "auto", display: "block" }}>
+                <defs>
+                  <linearGradient id="lineFlow" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#3D3B8E" stopOpacity="0.15"/>
+                    <stop offset="50%" stopColor="#3D3B8E" stopOpacity="0.5"/>
+                    <stop offset="100%" stopColor="#3D3B8E" stopOpacity="0.15"/>
+                  </linearGradient>
+                </defs>
+                <line x1="90" y1="80" x2="990" y2="80" stroke="url(#lineFlow)" strokeWidth="2" strokeDasharray="4 6"/>
+                <g>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" begin="1s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" begin="2s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" begin="3s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" begin="4s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                  <circle r="6" fill="#ff4081">
+                    <animateMotion dur="6s" begin="5s" repeatCount="indefinite" path="M 90 80 L 990 80"/>
+                  </circle>
+                </g>
+                {AKRONIM.map((item, i) => {
+                  const cx = 90 + i * 180;
+                  return (
+                    <g key={item.letter}>
+                      <circle cx={cx} cy="80" r="44" fill="#fafaff" stroke="#3D3B8E" strokeWidth="2"/>
+                      <text x={cx} y="95" textAnchor="middle" fontFamily="var(--font-sora), sans-serif" fontWeight="900" fontSize="36" fill="#3D3B8E">{item.letter}</text>
+                      <text x={cx} y="160" textAnchor="middle" fontFamily="var(--font-sora), sans-serif" fontWeight="700" fontSize="13" fill="#1a1929">{item.title}</text>
+                      <text x={cx} y="182" textAnchor="middle" fontFamily="var(--font-dm-sans), sans-serif" fontSize="11" fill="#4a4870">{item.meaning}</text>
+                    </g>
+                  );
+                })}
+              </svg>
+            </div>
+
+            {/* siatka kart 3x2 */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
+              {AKRONIM.map((item) => (
+                <div key={item.letter} style={{ position: "relative", backgroundColor: "#ffffff", border: "1px solid #e8e8f4", borderRadius: 8, padding: "24px 20px", display: "flex", alignItems: "center", gap: 16, overflow: "hidden" }}>
+                  <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 3, backgroundColor: "#3D3B8E" }} />
+                  <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 44, fontWeight: 900, color: "#3D3B8E", lineHeight: 1, width: 48, flexShrink: 0, textAlign: "center" }}>{item.letter}</span>
+                  <div>
+                    <p style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 15, fontWeight: 700, color: "#1a1929", margin: "0 0 4px 0", letterSpacing: 0.5 }}>{item.title}</p>
+                    <p style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 13, color: "#4a4870", margin: 0, lineHeight: 1.5 }}>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== O SYSTEMIE ===== */}
+      {/* ===== SYSTEM (z filozofia) ===== */}
       <section id="system" style={{ padding: "104px 24px", backgroundColor: "#1a1929" }}>
-        <div style={{ maxWidth: 1140, margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start" }} className="lk-grid-2">
-          <div>
-            <div style={{ width: 48, height: 4, backgroundColor: "#3D3B8E", borderRadius: 2, marginBottom: 24 }} />
-            <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.08, letterSpacing: -1 }}>
-              System
-            </h2>
+        <div style={{ maxWidth: 1140, margin: "0 auto" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr", gap: 64, alignItems: "start", marginBottom: 96 }} className="lk-grid-2">
+            <div>
+              <div style={{ width: 48, height: 4, backgroundColor: "#3D3B8E", borderRadius: 2, marginBottom: 24 }} />
+              <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.08, letterSpacing: -1 }}>
+                System
+              </h2>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+              <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "rgba(255,255,255,0.78)", lineHeight: 1.9, margin: 0 }}>
+                Lektos to platforma automatyzacji operacji biznesowych łącząca obsługę poczty,
+                integracje z systemami zewnętrznymi i raportowanie w jednym miejscu.
+              </p>
+              <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.9, margin: 0 }}>
+                System przetwarza przychodzące zapytania, wykonuje akcje w podłączonych
+                systemach i generuje raporty bez udziału człowieka. Pracownicy zadają
+                pytania w języku naturalnym przez wbudowany panel i dostają odpowiedzi
+                oparte na danych z podłączonych systemów.
+              </p>
+            </div>
           </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-            <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.9, margin: 0 }}>
-              Lektos to platforma automatyzacji operacji biznesowych łącząca obsługę poczty,
-              integracje z systemami zewnętrznymi oraz raportowanie w jednym miejscu.
-            </p>
-            <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.9, margin: 0 }}>
-              System przetwarza przychodzące zapytania, wykonuje akcje w podłączonych
-              systemach i generuje raporty bez udziału człowieka.
-            </p>
-            <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "rgba(255,255,255,0.7)", lineHeight: 1.9, margin: 0 }}>
-              Pracownicy mogą zadawać pytania w języku naturalnym przez wbudowany panel -
-              i dostają odpowiedzi oparte na danych z podłączonych systemów.
-            </p>
+
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)", paddingTop: 56 }}>
+            <div>
+              {FILOZOFIA.map((f, i) => (
+                <div key={f.title} style={{ display: "grid", gridTemplateColumns: "100px 1fr", gap: 32, alignItems: "start", padding: "32px 0", borderBottom: i < FILOZOFIA.length - 1 ? "1px solid rgba(255,255,255,0.08)" : "none" }} className="lk-filo-row">
+                  <div style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 36, fontWeight: 900, color: "rgba(255,255,255,0.18)", lineHeight: 1, letterSpacing: -2 }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </div>
+                  <div>
+                    <h4 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 20, fontWeight: 700, color: "#ffffff", marginBottom: 10, marginTop: 0, lineHeight: 1.2 }}>{f.title}</h4>
+                    <p style={{ fontSize: 15, color: "rgba(255,255,255,0.65)", lineHeight: 1.75, margin: 0, maxWidth: 720 }}>{f.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -275,34 +425,41 @@ export default function Home() {
       {/* ===== FUNKCJE ===== */}
       <section id="funkcje" style={{ padding: "104px 24px", backgroundColor: "#f7f7fc" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-          <div style={{ marginBottom: 64 }}>
+          <div style={{ marginBottom: 64, maxWidth: 720 }}>
             <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 3, textTransform: "uppercase" }}>Funkcje</span>
             <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800, color: "#1a1929", lineHeight: 1.08, marginTop: 12, letterSpacing: -1 }}>Co potrafi Lektos?</h2>
           </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 2 }}>
-            {FUNKCJE.map((f, i) => (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 1, backgroundColor: "#e8e8f4", border: "1px solid #e8e8f4" }}>
+            {FUNKCJE.map((f) => (
               <div
                 key={f.title}
-                style={{ backgroundColor: "#ffffff", padding: 36, borderLeft: i === 0 ? "none" : "1px solid #e8e8f4", transition: "all 0.2s", cursor: "default" }}
+                style={{ position: "relative", backgroundColor: "#ffffff", padding: 36, transition: "all 0.2s", cursor: "default" }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = "#3D3B8E";
                   const icon = e.currentTarget.querySelector(".lk-fi") as HTMLElement;
                   const title = e.currentTarget.querySelector(".lk-ft") as HTMLElement;
                   const desc = e.currentTarget.querySelector(".lk-fd") as HTMLElement;
+                  const badge = e.currentTarget.querySelector(".lk-fb") as HTMLElement;
                   if (icon) icon.style.color = "#ffffff";
                   if (title) title.style.color = "#ffffff";
                   if (desc) desc.style.color = "rgba(255,255,255,0.72)";
+                  if (badge) { badge.style.backgroundColor = "rgba(255,255,255,0.18)"; badge.style.color = "#ffffff"; }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "#ffffff";
                   const icon = e.currentTarget.querySelector(".lk-fi") as HTMLElement;
                   const title = e.currentTarget.querySelector(".lk-ft") as HTMLElement;
                   const desc = e.currentTarget.querySelector(".lk-fd") as HTMLElement;
+                  const badge = e.currentTarget.querySelector(".lk-fb") as HTMLElement;
                   if (icon) icon.style.color = "#3D3B8E";
                   if (title) title.style.color = "#1a1929";
                   if (desc) desc.style.color = "#4a4870";
+                  if (badge) { badge.style.backgroundColor = "#eeeef9"; badge.style.color = "#3D3B8E"; }
                 }}
               >
+                {f.badge && (
+                  <span className="lk-fb" style={{ position: "absolute", top: 20, right: 20, fontFamily: "var(--font-sora), sans-serif", fontSize: 10, fontWeight: 700, color: "#3D3B8E", backgroundColor: "#eeeef9", padding: "4px 10px", borderRadius: 100, letterSpacing: 1, textTransform: "uppercase", transition: "all 0.2s" }}>{f.badge}</span>
+                )}
                 <div className="lk-fi" style={{ color: "#3D3B8E", marginBottom: 20, transition: "color 0.2s" }}>{f.icon}</div>
                 <h3 className="lk-ft" style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 17, fontWeight: 700, color: "#1a1929", marginBottom: 14, lineHeight: 1.3, transition: "color 0.2s" }}>{f.title}</h3>
                 <p className="lk-fd" style={{ fontSize: 14, color: "#4a4870", lineHeight: 1.75, transition: "color 0.2s" }}>{f.desc}</p>
@@ -312,66 +469,46 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== PLATFORMA ===== */}
-      <section id="platforma" style={{ padding: "104px 24px", backgroundColor: "#3D3B8E", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", right: -40, bottom: -60, fontFamily: "var(--font-sora), sans-serif", fontSize: 340, fontWeight: 900, color: "rgba(255,255,255,0.04)", lineHeight: 1, userSelect: "none", pointerEvents: "none" }}>6</div>
-        <div style={{ maxWidth: 1140, margin: "0 auto", position: "relative" }}>
-          <div style={{ marginBottom: 56 }}>
-            <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.45)", letterSpacing: 3, textTransform: "uppercase" }}>Platforma</span>
-            <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800, color: "#ffffff", lineHeight: 1.08, marginTop: 12, letterSpacing: -1 }}>Co znaczy LEKTOS?</h2>
-            <p style={{ fontSize: 16, color: "rgba(255,255,255,0.6)", marginTop: 16, maxWidth: 460, lineHeight: 1.7 }}>
-              Lektos - z greki: "wybrany, zebrany". Platforma zbiera dane z systemów i zamienia je w działania.
-            </p>
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 0 }}>
-            {AKRONIM.map((item, i) => (
-              <div key={item.letter} style={{ display: "flex", alignItems: "center", gap: 20, padding: "24px 32px 24px 0", borderTop: "1px solid rgba(255,255,255,0.1)", borderRight: i % 2 === 0 ? "1px solid rgba(255,255,255,0.1)" : "none" }}>
-                <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(40px, 5vw, 64px)", fontWeight: 900, color: "rgba(255,255,255,0.12)", lineHeight: 1, width: 72, flexShrink: 0 }}>{item.letter}</span>
-                <div>
-                  <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 24, fontWeight: 800, color: "#ffffff", display: "block", lineHeight: 1 }}>{item.letter}</span>
-                  <span style={{ fontSize: 14, color: "rgba(255,255,255,0.65)", marginTop: 6, display: "block" }}>{item.meaning}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ===== WDROZENIE + MODEL ===== */}
       <section id="wdrozenie" style={{ padding: "104px 24px", backgroundColor: "#ffffff" }}>
         <div style={{ maxWidth: 1140, margin: "0 auto" }}>
-
           <div style={{ marginBottom: 96 }}>
-            <div style={{ marginBottom: 56 }}>
+            <div style={{ marginBottom: 56, maxWidth: 720 }}>
               <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 3, textTransform: "uppercase" }}>Wdrożenie</span>
               <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(28px, 4vw, 52px)", fontWeight: 800, color: "#1a1929", lineHeight: 1.08, marginTop: 12, letterSpacing: -1 }}>Proces wdrożenia</h2>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 0 }} className="lk-kroki">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 0 }} className="lk-kroki">
               {KROKI.map((k, i) => (
-                <div key={k.num} style={{ paddingRight: i < KROKI.length - 1 ? 32 : 0, paddingLeft: i > 0 ? 32 : 0, borderRight: i < KROKI.length - 1 ? "1px solid #e8e8f4" : "none" }} className="lk-krok">
-                  <div style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 80, fontWeight: 900, color: "#f0f0fa", lineHeight: 1, marginBottom: 8, letterSpacing: -4 }}>{k.num}</div>
-                  <h3 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 18, fontWeight: 700, color: "#1a1929", marginBottom: 12, lineHeight: 1.2 }}>{k.title}</h3>
-                  <p style={{ fontSize: 14, color: "#4a4870", lineHeight: 1.75 }}>{k.desc}</p>
+                <div key={k.num} style={{ paddingRight: i < KROKI.length - 1 ? 28 : 0, paddingLeft: i > 0 ? 28 : 0, borderRight: i < KROKI.length - 1 ? "1px solid #e8e8f4" : "none" }} className="lk-krok">
+                  <div style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 72, fontWeight: 900, color: "#f0f0fa", lineHeight: 1, marginBottom: 8, letterSpacing: -4 }}>{k.num}</div>
+                  <h3 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 17, fontWeight: 700, color: "#1a1929", marginBottom: 12, lineHeight: 1.2 }}>{k.title}</h3>
+                  <p style={{ fontSize: 13, color: "#4a4870", lineHeight: 1.7 }}>{k.desc}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div>
-            <div style={{ marginBottom: 48 }}>
+            <div style={{ marginBottom: 48, maxWidth: 720 }}>
               <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 3, textTransform: "uppercase" }}>Model współpracy</span>
               <h2 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: "clamp(26px, 3.5vw, 44px)", fontWeight: 800, color: "#1a1929", lineHeight: 1.1, marginTop: 12, letterSpacing: -1 }}>Jak możemy współpracować?</h2>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 24 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 20, marginBottom: 32 }}>
               {MODEL.map((m) => (
-                <div key={m.title} style={{ backgroundColor: m.highlight ? "#3D3B8E" : "#f7f7fc", borderRadius: 12, padding: "36px 32px", border: m.highlight ? "none" : "1px solid #e8e8f4" }}>
-                  <h3 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 18, fontWeight: 700, color: m.highlight ? "#ffffff" : "#1a1929", marginBottom: 14, lineHeight: 1.2 }}>{m.title}</h3>
-                  <p style={{ fontSize: 15, color: m.highlight ? "rgba(255,255,255,0.75)" : "#4a4870", lineHeight: 1.75 }}>{m.desc}</p>
+                <div key={m.title} style={{ backgroundColor: m.highlight ? "#3D3B8E" : "#f7f7fc", borderRadius: 12, padding: "32px 28px", border: m.highlight ? "none" : "1px solid #e8e8f4" }}>
+                  <h3 style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 17, fontWeight: 700, color: m.highlight ? "#ffffff" : "#1a1929", marginBottom: 12, lineHeight: 1.2 }}>{m.title}</h3>
+                  <p style={{ fontSize: 14, color: m.highlight ? "rgba(255,255,255,0.78)" : "#4a4870", lineHeight: 1.75 }}>{m.desc}</p>
                 </div>
               ))}
             </div>
+            <div style={{ backgroundColor: "#fafaff", border: "1px solid #e8e8f4", borderRadius: 12, padding: "20px 24px", display: "flex", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+              <span style={{ fontFamily: "var(--font-sora), sans-serif", fontSize: 11, fontWeight: 700, color: "#3D3B8E", letterSpacing: 2, textTransform: "uppercase" }}>Rozliczenie</span>
+              <span style={{ fontSize: 14, color: "#4a4870", lineHeight: 1.6 }}>
+                Retainer miesięczny (godziny w pakiecie) + hosting albo godziny doraźnie + hosting.
+                Klient widzi ewidencję godzin i wie za co płaci.
+              </span>
+            </div>
           </div>
-
         </div>
       </section>
 
