@@ -18,13 +18,13 @@ const AKRONIM = [
 const SYSTEM_ELEMENTS = [
   {
     title: "Programy współpracujące ze sobą",
-    desc: "Rdzeń operacyjny. To programy wykonują pracę - czytają dane, transformują je, generują raporty, wysyłają maile, podejmują decyzje. Nie są odizolowane: wynik jednego programu jest wejściem dla drugiego. Razem tworzą ciąg operacji, który wcześniej wykonywał człowiek.",
-    desc2: "Część programów korzysta z AI: LLM (statystyczna, językowa) do rozumienia tekstu i pytań w naturalnym języku, oraz AI symbolicznej (Prolog - regułowa, logiczna) do zapisywania twardych reguł biznesowych. Symboliczna AI to inny paradygmat - regułami logicznymi wyraża się reguły, których LLM nie zagwarantuje (np. że klient X ma cennik Y, albo że jeżeli paczka idzie do strefy Z, to dolicza się kwota Q). Razem te dwa podejścia dają system, który rozumie pytania jak człowiek, ale przestrzega reguł jak księgowy.",
+    desc: "Programy wykonują pracę: czytają dane, transformują je, generują raporty, wysyłają maile, podejmują decyzje. Nie są odizolowane: wynik jednego programu jest wejściem dla drugiego. Razem tworzą ciąg operacji, które wcześniej wykonywał człowiek.",
+    desc2: "Część programów korzysta z AI. Sztuczna inteligencja LLM (statystyczna, językowa) wykorzystywana jest do analizy tekstu i zadawania pytań w języku naturalnym. Sztuczna inteligencja symboliczna (regułowa, logiczna) służy do zapisywania twardych reguł biznesowych. Symboliczna AI operuje regułami logicznymi. Za ich pomocą wyraża się reguły, których LLM nie zagwarantuje. Na przyklad, że klient X ma cennik Y albo, że jeżeli paczka idzie do strefy Z, to dolicza się kwota Q. Razem te dwa podejścia dają system, który rozumie pytania jak człowiek, ale przestrzega reguł jak księgowy.",
     wide: true,
   },
   {
     title: "Konektory do systemów zewnętrznych",
-    desc: "Programy nie działają w próżni - muszą sięgać do systemów, które już w firmie są: ERP, CRM, e-commerce, magazyn, kurierzy. Konektory to mosty komunikacyjne, przez które Lektos czerpie dane i wykonuje akcje w tych systemach. Komunikacja z ludźmi to osobny kanał - poczta, czat, formularze - obsługiwany przez dedykowane moduły wejścia i wyjścia.",
+    desc: "Programy nie działają w próżni. Muszą sięgać do systemów, które są używane w firmie np. ERP, CRM, e-commerce, magazyn, kurierzy. Konektory to mosty komunikacyjne, przez które Lektos czerpie dane i wykonuje akcje w tych systemach. Komunikacja z ludźmi to osobny kanał: poczta, czat, formularze, obsługiwany przez dedykowane moduły wejścia i wyjścia.",
   },
   {
     title: "Harmonogram",
@@ -32,27 +32,27 @@ const SYSTEM_ELEMENTS = [
   },
   {
     title: "Baza wiedzy",
-    desc: "Dane firmy, z których programy korzystają. Konfiguracje klientów, cenniki, reguły, dokumentacje procesów, historia operacji. Bez bazy wiedzy programy nie wiedzą, jak postępować - z nią działają zgodnie z kontekstem firmy.",
+    desc: "Baza wiedzy to dane firmy, z których programy korzystają: konfiguracje klientów, cenniki, reguły, dokumentacje procesów, historia operacji. Bez bazy wiedzy programy nie wiedzą, jak postępować, a z nią działają zgodnie z kontekstem firmy.",
   },
   {
     title: "Panel czatowy",
-    desc: "Interfejs dla pracownika. Przez panel pracownik zadaje pytania w naturalnym języku i wydaje polecenia. Panel łączy LLM z dostępem do programów, konektorów i bazy wiedzy - dzięki temu odpowiedzi opierają się na rzeczywistych danych, a nie ogólnej wiedzy modelu.",
+    desc: "To interfejs dla pracownika. Przez panel pracownik zadaje pytania i wydaje polecenia w języku naturalnym. Panel łączy LLM z programami, konektorami i bazą wiedzy. Dzięki temu odpowiedzi opierają się na rzeczywistych danych, a nie ogólnej wiedzy modelu.",
   },
   {
     title: "Dedykowana infrastruktura",
-    desc: "To wszystko działa na dedykowanej infrastrukturze, którą przygotowujemy i dostarczamy - udostępnionej przez nas lub przygotowanej na zasobach klienta. Programy, konektory, harmonogram, baza wiedzy i panel czatowy nie żyją w chmurze obcych dostawców - są wdrożone na konkretnych serwerach nadzorowanych przez nas.",
+    desc: "Lektos działa na dedykowanej infrastrukturze, którą przygotowujemy i udostępniamy. Programy, konektory, harmonogram, baza wiedzy i panel czatowy nie żyją w chmurze obcych dostawców - są wdrożone na konkretnych serwerach nadzorowanych przez nas.",
     wide: true,
   },
 ];
 const FUNKCJE = [
   {
     title: "Integracje API",
-    desc: "Lektos łączy się z Twoimi systemami przez API. Mamy działające integracje z Way2Send, EasyStorage, INSEE/iStruct, LoMag, Mettler Toledo, IMAP/SMTP, FTP/SFTP, MS SQL Server, PostgreSQL, MySQL/MariaDB. Dla nowych systemów piszemy dedykowany konektor w Pythonie.",
+    desc: "Lektos łączy się z Twoimi systemami przez API. Dla każdego systemu tworzymy dedykowany konektor w Pythonie.",
     wide: true,
   },
   {
     title: "Konektory MCP",
-    desc: "Lektos buduje konektory MCP (Model Context Protocol) - protokół pozwalający modelom AI (Claude, ChatGPT, lokalne LLM) operować na Twoich plikach, bazach danych, mailach, repozytoriach git i systemach zewnętrznych. AI nie tylko czyta dane, ale wykonuje akcje przez ustandaryzowany interfejs.",
+    desc: "Lektos posiada konektory MCP (Model Context Protocol) - protokoły pozwalające modelom AI (Claude, ChatGPT, lokalne LLM) operować na Twoich plikach, bazach danych, mailach, repozytoriach git i systemach zewnętrznych. AI nie tylko czyta dane, ale wykonuje akcje przez ustandaryzowany interfejs.",
   },
   {
     title: "Automatyczne raporty",
@@ -68,7 +68,7 @@ const FUNKCJE = [
   },
   {
     title: "RAG i self-hosted LLM",
-    desc: "Moduł RAG pozwala AI odpowiadać na pytania na podstawie Twojej dokumentacji, maili archiwalnych i bazy wiedzy (PostgreSQL + pgvector). Dla klientów z wymogami compliance wdrażamy modele open source (Llama, Mistral, Qwen) na infrastrukturze klienta - cały stack AI działa lokalnie.",
+    desc: "Moduł RAG pozwala AI odpowiadać na pytania na podstawie Twojej dokumentacji, maili archiwalnych i bazy wiedzy. Dla klientów z wymogami compliance wdrażamy modele open source (Llama, Mistral, Qwen) na infrastrukturze klienta - cały stack AI działa lokalnie.",
   },
   {
     title: "API dla integratorów",
@@ -371,7 +371,7 @@ export default function Home() {
               Co potrafi Lektos?
             </h2>
             <p style={{ fontSize: "clamp(16px, 1.8vw, 18px)", color: "#4a4870", lineHeight: 1.85, margin: 0 }}>
-              Funkcje systemu - od fundamentu integracji, przez codzienną pracę, po zaawansowane opcje dla integratorów zewnętrznych.
+              Funkcje systemu: od fundamentu integracji, przez codzienną pracę, po zaawansowane opcje dla integratorów zewnętrznych.
             </p>
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }} className="lk-sys-grid">
