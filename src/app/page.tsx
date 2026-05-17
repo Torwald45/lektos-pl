@@ -229,7 +229,7 @@ export default function Home() {
                 na pytania w języku naturalnym.
               </p>
               <p style={{ fontSize: "clamp(14px, 1.6vw, 15px)", color: "#3D3B8E", fontWeight: 600, lineHeight: 1.7, marginBottom: 44, maxWidth: 540 }}>
-                Lektos jest rozwiązaniem wykorzystującym narzędzia open source, bez warstw pośrednich, bez vendor lock-in. Budujemy w oparciu o Linux, Bash, Python.
+                Lektos tworzymy przy użyciu otwartych narzędzi takich jak Linux i Python, bez warstw pośrednich i bez vendor lock-in. Nie składamy systemu z gotowych klocków no-code i low-code (np. n8n, Make.com, Vapi, Retell, ElevenLabs). Piszemy własny kod, który rozumiemy i za który bierzemy odpowiedzialność.
               </p>
               <div style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
                 <button
@@ -476,7 +476,7 @@ export default function Home() {
             style={{ fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 15, color: "rgba(255,255,255,0.38)", textDecoration: "none", transition: "color 0.2s" }}
             onMouseEnter={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.7)"}
             onMouseLeave={(e) => e.currentTarget.style.color = "rgba(255,255,255,0.38)"}
-          >[www.synchronicity.one](https://www.synchronicity.one)</a>
+          >www.synchronicity.one</a>
         </div>
       </section>
       {/* ===== FOOTER ===== */}
